@@ -15,4 +15,4 @@ Credits for the actual pipeline implementation should go to [Marc Sturm](https:/
 
 
 ---
-[![QBIC](
+[![QBIC](https://raw.githubusercontent.com/qbicsoftware/QBIC-megSAP-NGS/master/assets/qbic_logo.png)](https://qbic.life/)
