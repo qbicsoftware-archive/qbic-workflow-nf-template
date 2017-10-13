@@ -3,7 +3,7 @@ Nextflow workflows for the analysis of samples using the megSAP pipeline.
 
 ### Introduction
 
-The QBIC-megSAP-NGS pipeline is a medical genetics pipeline based on best-practices from imgag/megSAP and is primarily used for Exome analysis at our core-facility at QBIC[QBIC](https://qbic.life), Germany.
+The QBIC-megSAP-NGS pipeline is a medical genetics pipeline based on best-practices from imgag/megSAP and is primarily used for Exome analysis at our core-facility at [QBIC](https://qbic.life), Germany.
 
 ### Documentation
 
