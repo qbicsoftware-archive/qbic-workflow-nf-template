@@ -12,6 +12,9 @@ vim: syntax=groovy
  Alexander Peltzer <alexander.peltzer@qbic.uni-tuebingen.de>
 ----------------------------------------------------------------------------------------
 */
+
+//Version of the pipeline
+
 version=1.0
 
 def helpMessage() {
@@ -28,7 +31,6 @@ def helpMessage() {
     - RNA: Expression analysis
 
     DNA-Single Sample parameters:
-
 
 	Mandatory parameters:
   		-folder <string>         Analysis data folder.
@@ -59,4 +61,47 @@ def helpMessage() {
   		--conf <file>            Uses the given configuration file.
   		--tdx                    Writes a Tool Defition XML file.
 
+  	DNA-Multi Sample parameters: TBD
+
+  	RNA Expression parameters: TBD
  """
+}
+
+//Help message if nothing else is specified
+
+params.help = false
+
+if(params.help){
+	helpMessage()
+	exit 0
+}
+
+//Check NF version similar to NGI-RNAseq, thanks guys!
+
+nf_required_version = '0.25.0'
+try {
+    if( ! nextflow.version.matches(">= $nf_required_version") ){
+        throw GroovyException('Nextflow version too old')
+    }
+} catch (all) {
+    log.error "====================================================\n" +
+              "  Nextflow version $nf_required_version required! You are running v$workflow.nextflow.version.\n" +
+              "  Pipeline execution will continue, but things may break.\n" +
+              "  Please run `nextflow self-update` to update Nextflow.\n" +
+              "============================================================"
+}
+
+params.folder = false
+params.name = false
+params.system = false
+params.steps = false
+params.backup = false
+params.lofreq = false
+params.threads = false
+params.thres = false
+params.clip_overlap = false
+params.no_abra = false
+params.out_folder = false
+params.multiqc_config = "$baseDir/conf/multiqc_config.yaml"
+
+multiqc_config = file(params.multiqc_config)
