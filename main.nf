@@ -53,13 +53,10 @@ def helpMessage() {
                            Default is: 'default'.
 
 	Special parameters:
-  		--help                   Shows this help.
-  		--version                Prints version and exits.
-  		--verbose                Verbose error messages including traceback.
   		--log <file>             Enables logging to the specified file.
-  		--log_id <id>            Uses the given identifier for logging.
   		--conf <file>            Uses the given configuration file.
   		--tdx                    Writes a Tool Defition XML file.
+  		--email                  Sends you an e-mail on success/fail/etc (NOT YET IMPLEMENTED)
 
   	DNA-Multi Sample parameters: TBD
 
@@ -90,19 +87,23 @@ try {
               "  Please run `nextflow self-update` to update Nextflow.\n" +
               "============================================================"
 }
-params.reads = "data/*{1,2}.fastq.gz"
+
+//We're using the same defaults as in the original workflow specification here
 
 params.folder = false
 params.name = false
 params.system = false
-params.steps = false
+params.steps = "ma,vc,an,cn" //db import not for us, just at IMGAG
 params.backup = false
 params.lofreq = false
-params.threads = false
-params.thres = false
+params.threads = '2'
+params.thres = '20'
 params.clip_overlap = false
 params.no_abra = false
-params.out_folder = false
+params.out_folder = 'default'
+params.log = false
+params.conf = false
+params.tdx = false
 params.multiqc_config = "$baseDir/conf/multiqc_config.yaml"
 
 multiqc_config = file(params.multiqc_config)
@@ -110,4 +111,67 @@ multiqc_config = file(params.multiqc_config)
 
 //Validate inputs
 
-if( params.folder ) {}
+if( params.folder ) {
+	folder = Channel
+		.fromPath(params.folder)
+		.ifEmpty{exit 1, "Your input folder was not specified correctly"}
+}
+
+if (params.name) {
+	name = Channel
+		.fromPath(params.name)
+		.ifEmpty{exit 1, "The file identifier was not specified correctly."}
+}
+
+
+
+//Create file input channels
+
+folder_ch = Channel
+		.fromPath(params.folder)
+
+//Header log info
+
+log.info "========================================="
+log.info " QBIC-megSAP-NGS : v${version}"
+log.info "========================================="
+
+params.folder = false
+params.name = false
+params.system = false
+params.steps = "ma,vc,an,cn" //db import not for us, just at IMGAG
+params.backup = false
+params.lofreq = false
+params.threads = '2'
+params.thres = '20'
+params.clip_overlap = false
+params.no_abra = false
+params.out_folder = 'default'
+params.log = false
+params.conf = false
+params.tdx = false
+params.multiqc_config = "$baseDir/conf/multiqc_config.yaml"
+
+
+def summary = [:]
+summary['Folder']     = custom_runName ?: workflow.runName
+summary['Name']        = params.reads
+summary['System']    = params.singleEnd ? 'Single-End' : 'Paired-End'
+summary['Steps']       = params.genome
+summary['Backup'] = ( unstranded ? 'None' : forward_stranded ? 'Forward' : reverse_stranded ? 'Reverse' : 'None' )
+summary['Low Frequency'] = clip_r1
+summary['Threads'] = clip_r2
+summary["Threshold"] = three_prime_clip_r1
+summary["Clip Overlap"] = three_prime_clip_r2
+summary["Logfile"] = three_prime_clip_r2
+summary["Special configuration"] = three_prime_clip_r2
+summary["TDX"] = three_prime_clip_r2
+
+if(params.email) summary['E-Mail address'] = params.email
+log.info summary.collect { k,v -> "${k.padRight(15)}: $v" }.join("\n")
+log.info "========================================="
+
+
+/*
+Run megSAP-analyze.php with selected parameters on input file(s)
+*/
