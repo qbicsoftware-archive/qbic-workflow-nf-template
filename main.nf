@@ -112,21 +112,8 @@ multiqc_config = file(params.multiqc_config)
 
 //Validate inputs
 
-if( params.folder ) {
-	folder = Channel
-		.fromPath(params.folder)
-		.ifEmpty{exit 1, "Your input folder was not specified correctly"}
-		.into(folder_ch)
 
-}
-
-if (params.name) {
-	name = Channel
-		.fromPath(params.name)
-		.ifEmpty{exit 1, "The file identifier was not specified correctly."}
-		.into(name_ch)
-}
-
+//TBD
 
 
 //Header log info
@@ -159,20 +146,23 @@ log.info "========================================="
 Run megSAP-analyze.php with selected parameters on input file(s)
 */
 
-process single_sample_analysis {
+
+process qbic_megsap_single_sample_analysis {
 	tag "$name"
 	publishDir "${params.out_folder}", mode: 'move'
 
 	//publishDirs etc?
 
 	input:
-	file folder_path from folder_ch
+	file folder_path from params.folder
+	val sample_id from params.name
+	val threads from params.threads
 
 	output:
 
 	script:
 	"""
-	php /megSAP/src/Pipelines/analyze.php -folder ${folder_path}
+	php /megSAP/src/Pipelines/analyze.php -folder ${folder_path} -name ${sample_id} -threads ${threads}
 
 	"""
 
