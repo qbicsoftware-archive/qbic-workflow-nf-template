@@ -128,11 +128,6 @@ if (params.name) {
 
 
 
-//Create file input channels
-
-folder_ch = Channel
-		.fromPath(params.folder)
-
 //Header log info
 
 log.info "========================================="
