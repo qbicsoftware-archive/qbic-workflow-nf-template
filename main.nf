@@ -90,6 +90,7 @@ try {
               "  Please run `nextflow self-update` to update Nextflow.\n" +
               "============================================================"
 }
+params.reads = "data/*{1,2}.fastq.gz"
 
 params.folder = false
 params.name = false
@@ -105,3 +106,8 @@ params.out_folder = false
 params.multiqc_config = "$baseDir/conf/multiqc_config.yaml"
 
 multiqc_config = file(params.multiqc_config)
+
+
+//Validate inputs
+
+if( params.folder ) {}
