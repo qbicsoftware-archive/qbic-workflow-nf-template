@@ -104,6 +104,7 @@ params.out_folder = 'default'
 params.log = false
 params.conf = false
 params.tdx = false
+params.email = false
 params.multiqc_config = "$baseDir/conf/multiqc_config.yaml"
 
 multiqc_config = file(params.multiqc_config)
@@ -134,19 +135,20 @@ log.info "========================================="
 log.info " QBIC-megSAP-NGS : v${version}"
 log.info "========================================="
 
+
 def summary = [:]
-summary['Folder']     = custom_runName ?: workflow.runName
-summary['Name']        = params.reads
-summary['System']    = params.singleEnd ? 'Single-End' : 'Paired-End'
-summary['Steps']       = params.genome
-summary['Backup'] = ( unstranded ? 'None' : forward_stranded ? 'Forward' : reverse_stranded ? 'Reverse' : 'None' )
-summary['Low Frequency'] = clip_r1
-summary['Threads'] = clip_r2
-summary["Threshold"] = three_prime_clip_r1
-summary["Clip Overlap"] = three_prime_clip_r2
-summary["Logfile"] = three_prime_clip_r2
-summary["Special configuration"] = three_prime_clip_r2
-summary["TDX"] = three_prime_clip_r2
+summary['Folder']     = params.folder
+summary['Name']        = params.name
+summary['System']    = params.system
+summary['Steps']       = params.steps
+summary['Backup'] = params.backup
+summary['Low Frequency'] = params.lofreq
+summary['Threads'] = params.threads
+summary["Threshold"] = params.thres
+summary["Clip Overlap"] = params.clip_overlap
+summary["Logfile"] = params.log
+summary["Special configuration"] = params.conf
+summary["TDX"] = params.tdx
 
 if(params.email) summary['E-Mail address'] = params.email
 log.info summary.collect { k,v -> "${k.padRight(15)}: $v" }.join("\n")
