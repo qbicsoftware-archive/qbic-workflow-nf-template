@@ -134,23 +134,6 @@ log.info "========================================="
 log.info " QBIC-megSAP-NGS : v${version}"
 log.info "========================================="
 
-params.folder = false
-params.name = false
-params.system = false
-params.steps = "ma,vc,an,cn" //db import not for us, just at IMGAG
-params.backup = false
-params.lofreq = false
-params.threads = '2'
-params.thres = '20'
-params.clip_overlap = false
-params.no_abra = false
-params.out_folder = 'default'
-params.log = false
-params.conf = false
-params.tdx = false
-params.multiqc_config = "$baseDir/conf/multiqc_config.yaml"
-
-
 def summary = [:]
 summary['Folder']     = custom_runName ?: workflow.runName
 summary['Name']        = params.reads
