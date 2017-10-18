@@ -175,3 +175,20 @@ log.info "========================================="
 /*
 Run megSAP-analyze.php with selected parameters on input file(s)
 */
+
+process single_sample_analysis {
+	tag "$name"
+
+	//publishDirs etc?
+
+	input:
+
+	output:
+
+	script:
+	"""
+	
+	"""
+
+
+}
