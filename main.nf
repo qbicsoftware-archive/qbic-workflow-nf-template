@@ -154,7 +154,7 @@ process qbic_megsap_single_sample_analysis {
 	//publishDirs etc?
 
 	input:
-	file folder_path from params.folder
+	val folder_path from params.folder
 	val sample_id from params.name
 	val threads from params.threads
 	val steps from params.steps
