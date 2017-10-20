@@ -149,7 +149,14 @@ Run megSAP-analyze.php with selected parameters on input file(s)
 
 process qbic_megsap_single_sample_analysis {
 	tag "$name"
-	publishDir "${params.out_folder}", mode: 'move'
+	publishDir "${params.out_folder}", mode: 'move',
+      saveAs: {filename -> 
+              if(filename.indexOf(".bam") > 0) ? "$params.out_folder/$filename" : "$filename"
+         else if(filename.indexOf(".bai") > 0) ? "$params.out_folder/$filename" : "$filename"
+         else if(filename.indexOf(".gsvar") > 0) ? "$params.out_folder/$filename" : "$filename"
+         else if(filename.indexOf(".qcml") > 0) ? "$params.out_folder/$filename" : "$filename"
+         else "$filename"
+      }
 
 	//publishDirs etc?
 
@@ -161,10 +168,7 @@ process qbic_megsap_single_sample_analysis {
   val system from params.system
 
 	output:
-  file *.bam in output_files
-  file *.bai in output_files
-  file *.gsvar in output_files
-  file *.qcml in output_files
+
 	script:
 	"""
 	php /megSAP/src/Pipelines/analyze.php -folder ${folder_path} -name ${sample_id} -threads ${threads} -steps ${steps} -system ${system}
