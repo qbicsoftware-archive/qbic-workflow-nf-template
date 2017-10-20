@@ -149,12 +149,12 @@ Run megSAP-analyze.php with selected parameters on input file(s)
 
 process qbic_megsap_single_sample_analysis {
 	tag "$name"
-	publishDir "${params.out_folder}", mode: 'move',
+	publishDir "${params.out_folder}", mode: 'copy',
       saveAs: {filename -> 
-              if(filename.indexOf(".bam") > 0) ? "$params.out_folder/$filename" : "$filename"
-         else if(filename.indexOf(".bai") > 0) ? "$params.out_folder/$filename" : "$filename"
-         else if(filename.indexOf(".gsvar") > 0) ? "$params.out_folder/$filename" : "$filename"
-         else if(filename.indexOf(".qcml") > 0) ? "$params.out_folder/$filename" : "$filename"
+              if(filename.indexOf(".bam") == -1) "$params.out_folder/$filename"
+         else if(filename.indexOf(".bai") == -1) "$params.out_folder/$filename"
+         else if(filename.indexOf(".gsvar") == -1) "$params.out_folder/$filename"
+         else if(filename.indexOf(".qcml") == -1)  "$params.out_folder/$filename"
          else "$filename"
       }
 
