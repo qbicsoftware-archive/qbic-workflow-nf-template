@@ -158,12 +158,16 @@ process qbic_megsap_single_sample_analysis {
 	val sample_id from params.name
 	val threads from params.threads
 	val steps from params.steps
+  val system from params.system
 
 	output:
-
+  file *.bam in output_files
+  file *.bai in output_files
+  file *.gsvar in output_files
+  file *.qcml in output_files
 	script:
 	"""
-	php /megSAP/src/Pipelines/analyze.php -folder ${folder_path} -name ${sample_id} -threads ${threads} -steps ${steps}
+	php /megSAP/src/Pipelines/analyze.php -folder ${folder_path} -name ${sample_id} -threads ${threads} -steps ${steps} -system ${system}
 
 	"""
 
